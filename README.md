@@ -765,5 +765,5 @@ Este proyecto ha sido desarrollado utilizando:
 Este proyecto ha sido desarrollado por **Bryan Gallegos**.
 
 ## Licencia
-© 2024 Bryan Gallegos. Todos los derechos reservados.
+© 2025 Bryan Gallegos. Todos los derechos reservados.
 
