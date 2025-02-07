@@ -1,0 +1,38 @@
+.btn-create{
+    background-color: green;
+}
+
+/* PAGINACIÓN */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+  }
+  
+  .pagination .btn {
+    padding: 5px 10px; /* Tamaño más pequeño */
+    margin: 0 5px; /* Espacio entre botones */
+    border-radius: 5px;
+    font-size: 0.9rem; /* Tamaño de texto reducido */
+    border: 1px solid #ddd;
+    color:black;
+    background-color: #f8f9fa; /* Fondo claro */
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .pagination .btn:hover {
+    background-color: #0056b3;
+    color: white;
+  }
+  
+  .pagination .btn.active {
+    background-color: #007bff;
+    color: white;
+    border: none;
+  }
+  
+  .btn-sucess{
+    gap: 5px;
+  }

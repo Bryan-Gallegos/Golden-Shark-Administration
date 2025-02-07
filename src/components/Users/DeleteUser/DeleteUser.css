@@ -1,0 +1,87 @@
+/* Contenedor principal */
+.delete-user-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Cambia la alineación vertical */
+    min-height: 100vh;
+    padding-top: 35vh; /* Agrega espacio en la parte superior */
+    background-color: #f8f9fa; /* Fondo claro */
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Tarjeta */
+  .delete-user-card {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 600px;
+    width: 100%;
+  }
+  
+  /* Título */
+  .delete-user-title {
+    margin-bottom: 20px;
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #dc3545;
+  }
+  
+  /* Botones */
+  .buttons-delete-body {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  .buttons-delete-body button{
+    padding: 10px;
+  }
+  
+  /* Mensaje de error */
+  .delete-user-error {
+    color: #dc3545;
+    font-size: 1rem;
+    margin-bottom: 20px;
+  }
+  
+
+
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 400px;
+  }
+  
+  .modal-content h2 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+  }
+  
+  .modal-content p {
+    font-size: 1rem;
+    margin-bottom: 20px;
+  }
+  
+  .modal-content .btn {
+    padding: 10px 20px;
+    font-size: 1rem;
+  }
+  

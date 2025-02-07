@@ -1,0 +1,199 @@
+/*   CONTAINER PARA EL BOTON DE CREAR NUEVO ROL*/
+
+.add-role-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+
+}
+
+.add-role-container .btn {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  font-size: 14px;
+  border-radius: 10px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-top: auto;
+}
+
+.add-role-container .btn:hover {
+  background-color: #218838;
+}
+
+.add-role-container .btn svg {
+  margin-right: 8px;
+}
+
+/* Estilo general de la tabla */
+.table {
+  margin: 0 auto;
+  width: 100%;
+  /* Abarca todo el ancho disponible */
+  max-width: 1200px;
+  /* Define un ancho máximo */
+  background-color: #fff;
+  border-collapse: collapse;
+  border: 1px solid #ddd;
+  text-align: left;
+  font-family: Arial, sans-serif;
+}
+
+/* Encabezados de la tabla */
+.table th {
+  background-color: #343a40;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+/* Celdas de la tabla */
+.table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+/* Filas alternadas */
+.table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+  /* Fondo claro */
+}
+
+.table tbody tr:nth-child(odd) {
+  background-color: #ffffff;
+  /* Fondo blanco */
+}
+.table button{
+  margin-top: auto;
+}
+
+
+/* PAGINACIÓN */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.page-button {
+  padding: 5px 10px;
+  /* Tamaño más pequeño */
+  margin: 0 5px;
+  /* Espacio entre botones */
+  border-radius: 5px;
+  font-size: 0.9rem;
+  /* Tamaño de texto reducido */
+  border: 1px solid #ddd;
+  background-color: #f8f9fa;
+  /* Fondo claro */
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.page-button.active {
+  background-color: #007bff;
+  color: white;
+  border: none;
+}
+
+.page-button:hover {
+  background-color: #0056b3;
+  color: white;
+}
+
+/*   BOTONES */
+.btn {
+  border-radius: 5px;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+  /* Espacio entre botones */
+  padding: 5px 10px;
+  /* Ajusta el tamaño interno */
+}
+
+.btn-success {
+  background-color: #007bff;
+  border: none;
+  color: white;
+}
+
+.btn-info {
+  background-color: #28a745;
+  border: none;
+  color: white;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  border: none;
+  color: white;
+}
+
+.btn-eliminar {
+  border-radius: 5px;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+  /* Espacio entre botones */
+  padding: 5px 10px;
+  /* Ajusta el tamaño interno */
+}
+
+/* Estilo del botón */
+.btn-eliminar[disabled] {
+  position: relative; /* Necesario para el tooltip */
+  cursor: not-allowed;
+  background-color: #f8d7da; /* Fondo claro */
+  color: #dc3545; /* Texto rojo */
+  border: 1px solid #f5c6cb;
+}
+
+/* Tooltip */
+.btn-eliminar[disabled]::after {
+  content: "Este rol no se puede eliminar";
+  position: absolute;
+  bottom: 125%; /* Por encima del botón */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease-in-out;
+  z-index: 10;
+}
+
+/* Flecha del tooltip */
+.btn-eliminar[disabled]::before {
+  content: "";
+  position: absolute;
+  bottom: 115%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: #333 transparent transparent transparent;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+  z-index: 10;
+}
+
+/* Mostrar tooltip al pasar el mouse */
+.btn-eliminar[disabled]:hover::after,
+.btn-eliminar[disabled]:hover::before {
+  opacity: 1;
+}
