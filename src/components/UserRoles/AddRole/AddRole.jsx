@@ -80,6 +80,19 @@ function AddRole() {
           },
         }
       );
+
+      // Actualizar la lista de roles del usuario en la UI
+      setUser((prevUser) => ({
+        ...prevUser,
+        roles: [...prevUser.roles, selectedRole], // Agregar el nuevo rol
+      }));
+
+      // Eliminar el rol de la lista de roles disponibles
+      setAvailableRoles((prevRoles) =>
+        prevRoles.filter((role) => role !== selectedRole)
+      );
+
+      // Activar el modal con el mensaje de éxito
       setModalMessage(
         `Rol "${roleLabels[selectedRole] || selectedRole}" agregado correctamente al usuario.`
       );
@@ -146,17 +159,31 @@ function AddRole() {
                 </option>
               ))}
             </select>
-            <button type="submit" className="btn-agregar">Agregar Rol</button>
+            <div className="buttons-container">
+              <button onClick={() => navigate(-1)} className="btn-regresar">Volver</button>
+              <button type="submit" className="btn-agregar">Agregar Rol</button>
+            </div>
+
           </form>
         </>
       ) : (
         <div className="alert error">No se encontró información del usuario.</div>
       )}
 
-      <button onClick={() => navigate(-1)} className="btn-regresar">Volver</button>
+
+      {/* Modal de éxito visualmente mejorado */}
+      {showModal && (
+        <div className="modal-overlay">
+          <div className="modal-box">
+            <h3>✅ ¡Rol Agregado con Éxito!</h3>
+            <p>{modalMessage}</p>
+            <button className="btn-modal-close" onClick={handleCloseModal}>
+              Cerrar
+            </button>
+          </div>
+        </div>
+      )}
     </div>
-
-
   );
 }
 

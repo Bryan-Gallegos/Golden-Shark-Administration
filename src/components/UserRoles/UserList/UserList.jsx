@@ -2,13 +2,17 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaEye, FaPlus, FaTrash } from "react-icons/fa";
+import roleLabels from "../../../utils/roleLabels"; // Importamos nombres amigables de roles
 import "./UserList.css";
 
 function UserList() {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState([]); // Usuarios originales
+  const [filteredUsers, setFilteredUsers] = useState([]); // Usuarios filtrados
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedRole, setSelectedRole] = useState("");
+  const [roles, setRoles] = useState([]); // Lista de roles
   const [currentPage, setCurrentPage] = useState(1);
-  const usersPerPage = 13; // Define cuántos usuarios por página
+  const usersPerPage = 10;
   const username = "hosting55370us";
   const password = "2AOr NmiY rQkn E83v z7Kv GDho";
   const navigate = useNavigate();
@@ -17,68 +21,104 @@ function UserList() {
     fetchUsers();
   }, []);
 
+  useEffect(() => {
+    filterUsers();
+  }, [searchQuery, selectedRole]); // Se ejecuta al cambiar la búsqueda o el filtro de roles
+
   const fetchUsers = async () => {
     try {
       const response = await axios.get(
         "https://www.goldenshark.es/wp-json/custom-api/v1/users",
         {
-          auth: {
-            username,
-            password,
-          },
+          auth: { username, password },
         }
       );
       setUsers(response.data);
+      setFilteredUsers(response.data);
+
+      // Extraer todos los roles únicos
+      const allRoles = new Set();
+      response.data.forEach((user) => {
+        user.roles.forEach((role) => allRoles.add(role));
+      });
+      setRoles(Array.from(allRoles));
     } catch (error) {
       console.error("Error fetching users:", error);
     }
   };
 
-  const handleSearch = () => {
-    if (!searchQuery) return;
-    const filtered = users.filter(
-      (user) =>
-        user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    setUsers(filtered);
+  const filterUsers = () => {
+    let filtered = [...users];
+
+    if (searchQuery) {
+      filtered = filtered.filter(
+        (user) =>
+          user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          user.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    if (selectedRole && selectedRole !== "Todos los Roles") {
+      filtered = filtered.filter((user) => user.roles.includes(selectedRole));
+    }
+
+    setFilteredUsers(filtered);
+    setCurrentPage(1); // Reinicia la paginación al cambiar filtros
   };
 
-  // Cálculo para la paginación
+  // Paginación
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
-
-  const totalPages = Math.ceil(users.length / usersPerPage);
-
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
+  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
+  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
 
   return (
     <div className="container mt-5">
       <h1 className="text-center">Gestión de Roles de Usuario</h1>
-      <div className="search-bar">
+      <div className="search-bar d-flex align-items-center gap-3">
+        {/* Búsqueda en tiempo real */}
         <input
           type="text"
-          className="form-control "
-          placeholder="Búsqueda de Usuario por ID, nombre o correo"
+          className="form-control"
+          placeholder="Búsqueda por Nombre o correo"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-        <button onClick={handleSearch}>Buscar</button>
+
+        {/* Filtro de roles que busca automáticamente */}
+        <select
+          className="form-control"
+          value={selectedRole}
+          onChange={(e) => setSelectedRole(e.target.value)}
+        >
+          <option value="Todos los Roles">📌 Todos los Roles</option>
+          {roles.map((role) => (
+            <option key={role} value={role}>
+              {roleLabels[role] || role}
+            </option>
+          ))}
+        </select>
       </div>
+
       <table className="table">
         <thead>
           <tr>
-            <th style={{ width: "10%" }}>ID</th>
-            <th style={{ width: "35%" }}>Nombre</th>
-            <th style={{ width: "40%" }}>Email</th>
-            <th style={{ width: "15%" }}>Acciones</th>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
-          {currentUsers.length > 0 ? (
+          {users.length === 0 ? (
+            <tr>
+              <td colSpan="4" className="text-center">Cargando los usuarios...</td>
+            </tr>
+          ) : filteredUsers.length === 0 ? (
+            <tr>
+              <td colSpan="4" className="text-center">No se encontraron coincidencias.</td>
+            </tr>
+          ) : (
             currentUsers.map((user) => (
               <tr key={user.id}>
                 <td>{user.id}</td>
@@ -87,12 +127,11 @@ function UserList() {
                 <td>
                   <button
                     className="btn btn-success btn-sm"
-                    style={{ backgroundColor: '#007bff', color: '#fff' }} // Azul personalizado
+                    style={{ backgroundColor: "#007bff", color: "#fff" }}
                     onClick={() => navigate(`view/id/${user?.id}`)}
                     title="Ver Usuario"
                   >
                     <FaEye />
-                    
                   </button>
                   <button
                     className="btn btn-info btn-sm"
@@ -111,29 +150,26 @@ function UserList() {
                 </td>
               </tr>
             ))
-          ) : (
-            <tr>
-              <td colSpan="4" className="text-center">
-                Cargando Usuarios .....
-              </td>
-            </tr>
           )}
         </tbody>
       </table>
+
       {/* Paginación */}
-      <div className="pagination d-flex justify-content-center mt-4">
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-          <button
-            key={page}
-            className={`btn btn-secondary mx-1 ${
-              page === currentPage ? "active" : ""
-            }`}
-            onClick={() => handlePageChange(page)}
-          >
-            {page}
-          </button>
-        ))}
-      </div>
+      {filteredUsers.length > 0 && (
+        <div className="pagination d-flex justify-content-center mt-4">
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <button
+              key={page}
+              className={`btn btn-secondary mx-1 ${
+                page === currentPage ? "active" : ""
+              }`}
+              onClick={() => setCurrentPage(page)}
+            >
+              {page}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

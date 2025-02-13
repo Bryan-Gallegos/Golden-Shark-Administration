@@ -8,6 +8,7 @@ import "./ListRole.css";
 
 const ListRole = () => {
   const [roles, setRoles] = useState([]);
+  const [allRoles, setAllRoles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const rolesPerPage = 10; // Número de roles por página
@@ -38,9 +39,7 @@ const ListRole = () => {
         setRoles(response.data);
       } catch (err) {
         console.error("Error al obtener roles:", err);
-      } finally {
-        setLoading(false);
-      }
+      } 
     };
 
     fetchRoles();
@@ -76,7 +75,7 @@ const ListRole = () => {
           </tr>
         </thead>
         <tbody>
-          {!loading && currentRoles.length > 0 ? (
+          {currentRoles.length > 0 ? (
             currentRoles.map((role) => (
               <tr key={role.key}>
                 <td>{role.key}</td>
