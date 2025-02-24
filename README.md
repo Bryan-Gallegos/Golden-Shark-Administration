@@ -30,13 +30,15 @@ Para que el proyecto funcione correctamente, primero debemos configurar la API e
 
 ```php
 
+
+
 /**
  * Añadir roles de usuario a la API REST
  */
 
 add_action('rest_api_init', function () {
     // Endpoint para obtener todos los usuarios
-    register_rest_route('custom-api/v1', '/users', [
+    register_rest_route('api-custom/v1', '/users', [
         'methods' => 'GET',
         'callback' => function () {
             $users = get_users(['number' => -1]); // Obtiene todos los usuarios sin límite
@@ -57,12 +59,12 @@ add_action('rest_api_init', function () {
             return $response;
         },
         'permission_callback' => function () {
-            return current_user_can('list_users'); // Solo usuarios autorizados
+            return current_user_can('administrator'); // Solo usuarios autorizados
         },
     ]);
 
     // Endpoint para obtener un usuario específico por ID
-    register_rest_route('custom-api/v1', '/user/(?P<id>\d+)', [
+    register_rest_route('api-custom/v1', '/user/(?P<id>\d+)', [
         'methods' => 'GET',
         'callback' => function ($data) {
             $user_id = $data['id']; // ID del usuario
@@ -83,12 +85,12 @@ add_action('rest_api_init', function () {
             ];
         },
         'permission_callback' => function () {
-            return current_user_can('list_users'); // Verifica permisos
+            return current_user_can('administrator'); // Verifica permisos
         },
     ]);
 
     // Endpoint para agregar un rol a un usuario
-    register_rest_route('custom-api/v1', '/user/add-role', [
+    register_rest_route('api-custom/v1', '/user/add-role', [
         'methods' => 'POST',
         'callback' => function ($data) {
             $user_id = $data['id'];
@@ -110,7 +112,7 @@ add_action('rest_api_init', function () {
             ];
         },
         'permission_callback' => function () {
-            return current_user_can('edit_users'); // Verifica permisos
+            return current_user_can('administrator'); // Verifica permisos
         },
         'args' => [
             'id' => [
@@ -129,7 +131,7 @@ add_action('rest_api_init', function () {
     ]);
 	
 	// Endpoint para eliminar un rol de un usuario
-	register_rest_route('custom-api/v1', '/user/remove-role', [
+	register_rest_route('api-custom/v1', '/user/remove-role', [
         'methods' => 'POST',
         'callback' => function ($data) {
             $user_id = $data['id'];
@@ -159,7 +161,7 @@ add_action('rest_api_init', function () {
             ];
         },
         'permission_callback' => function () {
-            return current_user_can('edit_users'); // Solo administradores pueden modificar roles
+            return current_user_can('administrator'); // Solo administradores pueden modificar roles
         },
         'args' => [
             'id' => [
@@ -178,7 +180,7 @@ add_action('rest_api_init', function () {
     ]);
 	
 	// Endpoint para buscar por el email a un usuario
-	register_rest_route('custom-api/v1', '/user/email/(?P<email>[^\/]+)', [
+	register_rest_route('api-custom/v1', '/user/email/(?P<email>[^\/]+)', [
         'methods' => 'GET',
         'callback' => function ($data) {
             $email = sanitize_email(urldecode($data['email'])); // Decodifica y sanitiza el email
@@ -199,12 +201,12 @@ add_action('rest_api_init', function () {
             ];
         },
         'permission_callback' => function () {
-            return current_user_can('list_users'); // Solo administradores pueden buscar usuarios
+            return current_user_can('administrator'); // Solo administradores pueden buscar usuarios
         },
     ]);
 	
 	// Endpoint para buscar por el id a un usuario
-	register_rest_route('custom-api/v1', '/user/id/(?P<id>\d+)', [
+	register_rest_route('api-custom/v1', '/user/id/(?P<id>\d+)', [
         'methods' => 'GET',
         'callback' => function ($data) {
             $id = intval($data['id']); // Sanitiza el ID
@@ -225,12 +227,12 @@ add_action('rest_api_init', function () {
             ];
         },
         'permission_callback' => function () {
-            return current_user_can('list_users'); // Solo administradores pueden buscar usuarios
+            return current_user_can('administrator'); // Solo administradores pueden buscar usuarios
         },
     ]);
 	
 	// Endpoint para buscar por una palabra aleatoria y muestre resultados
-	register_rest_route('custom-api/v1', '/user/search/(?P<query>[^\/]+)', [
+	register_rest_route('api-custom/v1', '/user/search/(?P<query>[^\/]+)', [
 	    'methods' => 'GET',
 	    'callback' => function ($data) {
 	        global $wpdb;
@@ -258,7 +260,7 @@ add_action('rest_api_init', function () {
 	        }, $users);
 	    },
 	    'permission_callback' => function () {
-	        return current_user_can('list_users'); // Solo administradores pueden buscar usuarios
+	        return current_user_can('administrator'); // Solo administradores pueden buscar usuarios
     	},
 	]);
 
@@ -272,7 +274,7 @@ add_action('rest_api_init', function () {
 
 add_action('rest_api_init', function () {
     // Endpoint para obtener todos los roles
-    register_rest_route('custom-api/v1', '/roles', [
+    register_rest_route('api-custom/v1', '/roles', [
         'methods' => 'GET',
         'callback' => function () {
             global $wp_roles;
@@ -280,22 +282,27 @@ add_action('rest_api_init', function () {
 
             $response = [];
             foreach ($roles as $role_key => $role_details) {
-                $response[] = [
+                //Contar cuantos usuarios tiene este rol
+                $user_query = new WP_User_Query(['role' => $role_key]);
+				$user_count = $user_query->get_total();
+				
+				$response[] = [
                     'key' => $role_key,
                     'name' => $role_details['name'],
                     'capabilities' => $role_details['capabilities'],
+					'user_count' => $user_count, //Aquí se incluye la cantidad de usuarios en el rol
                 ];
             }
 
             return $response;
         },
         'permission_callback' => function () {
-            return current_user_can('list_users'); // Solo usuarios autorizados
+            return current_user_can('administrator'); // Solo usuarios autorizados
         },
     ]);
 
     // Endpoint para obtener detalles de un rol específico
-    register_rest_route('custom-api/v1', '/role/(?P<key>[^\/]+)', [
+    register_rest_route('api-custom/v1', '/role/(?P<key>[^\/]+)', [
         'methods' => 'GET',
         'callback' => function ($data) {
             global $wp_roles;
@@ -318,12 +325,12 @@ add_action('rest_api_init', function () {
             ];
         },
         'permission_callback' => function () {
-            return current_user_can('list_users'); // Solo usuarios autorizados
+            return current_user_can('administrator'); // Solo usuarios autorizados
         },
     ]);
 
     // Endpoint para editar el nombre de un rol
-    register_rest_route('custom-api/v1', '/role/edit', [
+    register_rest_route('api-custom/v1', '/role/edit', [
 	    'methods' => 'POST',
 	    'callback' => function ($data) {
 	        $role_key = sanitize_text_field($data['key']);
@@ -359,7 +366,7 @@ add_action('rest_api_init', function () {
 	        ];
 	    },
 	    'permission_callback' => function () {
-	        return current_user_can('edit_users'); // Solo usuarios autorizados
+	        return current_user_can('administrator'); // Solo usuarios autorizados
 	    },
 	    'args' => [
 	        'key' => [
@@ -379,7 +386,7 @@ add_action('rest_api_init', function () {
 
 
     // Endpoint para eliminar un rol
-    register_rest_route('custom-api/v1', '/role/delete', [
+    register_rest_route('api-custom/v1', '/role/delete', [
     	'methods' => 'POST',
     	'callback' => function ($data) {
 	        $role_key = sanitize_text_field($data['key']);
@@ -416,7 +423,7 @@ add_action('rest_api_init', function () {
 	        ];
 	    },
 	    'permission_callback' => function () {
-	        return current_user_can('delete_users'); // Solo usuarios autorizados
+	        return current_user_can('administrator'); // Solo usuarios autorizados
 	    },
 	    'args' => [
 	        'key' => [
@@ -430,7 +437,7 @@ add_action('rest_api_init', function () {
 
 	
 	// Endpoint para crear un nuevo rol
-	register_rest_route('custom-api/v1', '/roles/create', [
+	register_rest_route('api-custom/v1', '/roles/create', [
 	    'methods' => 'POST',
 	    'callback' => function ($data) {
 	        $key = sanitize_text_field($data['key']);
@@ -466,7 +473,7 @@ add_action('rest_api_init', function () {
 	        ];
 	    },
 	    'permission_callback' => function () {
-	        return current_user_can('create_roles'); // Verifica permisos
+	        return current_user_can('administrator'); // Verifica permisos
 	    },
 	]);
 
@@ -475,7 +482,7 @@ add_action('rest_api_init', function () {
 
 //Endpoint para Generar roleLabels.js
 add_action('rest_api_init', function () {
-    register_rest_route('custom-api/v1', '/export-role-labels', [
+    register_rest_route('api-custom/v1', '/export-role-labels', [
         'methods' => 'GET',
         'callback' => function () {
             global $wp_roles;
@@ -506,7 +513,7 @@ add_action('rest_api_init', function () {
 //Enpoint para gestionar a los usuarios
 add_action('rest_api_init', function () {
     // Endpoint para obtener información básica de los usuarios con nombre y apellido separados
-    register_rest_route('custom-api/v1', '/users_info', [
+    register_rest_route('api-custom/v1', '/users_info', [
         'methods' => 'GET',
         'callback' => function () {
             $users = get_users(['number' => -1]); // Obtiene todos los usuarios
@@ -530,12 +537,12 @@ add_action('rest_api_init', function () {
             return $response;
         },
         'permission_callback' => function () {
-            return current_user_can('list_users'); // Verifica permisos
+            return current_user_can('administrator'); // Verifica permisos
         },
     ]);
 	
 	//Endpoint para ver un usuario especifico
-	register_rest_route('custom-api/v1', '/users_info/(?P<id>\d+)', [
+	register_rest_route('api-custom/v1', '/users_info/(?P<id>\d+)', [
         'methods' => 'GET',
         'callback' => function ($data) {
             $user_id = intval($data['id']); // Sanitizar y obtener el ID del usuario
@@ -561,13 +568,13 @@ add_action('rest_api_init', function () {
             ];
         },
         'permission_callback' => function () {
-            return current_user_can('list_users'); // Solo administradores o usuarios autorizados
+            return current_user_can('administrator'); // Solo administradores o usuarios autorizados
         },
     ]);
 	
 	
 	//Endpoint para crear un nuevo usuario
-	register_rest_route('custom-api/v1', '/users_info/create', [
+	register_rest_route('api-custom/v1', '/users_info/create', [
         'methods' => 'POST',
         'callback' => function ($data) {
             $username = sanitize_text_field($data['username']);
@@ -599,7 +606,7 @@ add_action('rest_api_init', function () {
             ];
         },
         'permission_callback' => function () {
-            return current_user_can('create_users'); // Verifica permisos
+            return current_user_can('administrator'); // Verifica permisos
         },
         'args' => [
             'username' => [
@@ -624,7 +631,7 @@ add_action('rest_api_init', function () {
     ]);
 	
 	//Endpoint para editar un usuario
-	 register_rest_route('custom-api/v1', '/users_info/edit/(?P<id>\d+)', [
+	 register_rest_route('api-custom/v1', '/users_info/edit/(?P<id>\d+)', [
         'methods' => 'POST',
         'callback' => function ($data) {
             $user_id = intval($data['id']);
@@ -654,7 +661,7 @@ add_action('rest_api_init', function () {
             ];
         },
         'permission_callback' => function () {
-            return current_user_can('edit_users'); // Verifica permisos
+            return current_user_can('administrator'); // Verifica permisos
         },
         'args' => [
             'id' => [
@@ -682,7 +689,7 @@ add_action('rest_api_init', function () {
     ]);
 	
 	//Endpoint para eliminar un usuario
-	register_rest_route('custom-api/v1', '/users_info/delete/(?P<id>\d+)', [
+	register_rest_route('api-custom/v1', '/users_info/delete/(?P<id>\d+)', [
         'methods' => 'DELETE',
         'callback' => function ($data) {
             $user_id = intval($data['id']);
@@ -705,7 +712,7 @@ add_action('rest_api_init', function () {
             ];
         },
         'permission_callback' => function () {
-            return current_user_can('delete_users'); // Verifica permisos
+            return current_user_can('administrator'); // Verifica permisos
         },
         'args' => [
             'id' => [
@@ -718,7 +725,7 @@ add_action('rest_api_init', function () {
     ]);
 	
 	//Endpoint para buscar un usuario
-	register_rest_route('custom-api/v1', '/user/search/(?P<query>[^\/]+)', [
+	register_rest_route('api-custom/v1', '/user/search/(?P<query>[^\/]+)', [
 	    'methods' => 'GET',
 	    'callback' => function ($data) {
 	        global $wpdb;
@@ -745,12 +752,107 @@ add_action('rest_api_init', function () {
 	        }, $users);
 	    },
 	    'permission_callback' => function () {
-	        return current_user_can('list_users');
+	        return current_user_can('administrator');
 	    },
 	]);
 	
 	
 });
+
+/*
+    API PARA EL LOGIN Y LOGOUT DE SOLAMENTE ADMINISTRADORES
+*/
+add_action('rest_api_init', function () {
+    register_rest_route('api-custom/v1', '/login', array(
+        'methods'  => 'POST',
+        'callback' => 'custom_api_login',
+        'permission_callback' => '__return_true'
+    ));
+});
+
+function custom_api_login(WP_REST_Request $request) {
+    $parameters = $request->get_json_params();
+    $username = sanitize_text_field($parameters['username']);
+    $password = sanitize_text_field($parameters['password']);
+
+    if (empty($username) || empty($password)) {
+        return new WP_Error('empty_credentials', 'Debes proporcionar usuario y contraseña.', ['status' => 400]);
+    }
+
+    $user = wp_authenticate($username, $password);
+
+    if (is_wp_error($user)) {
+        return new WP_Error('invalid_credentials', 'Usuario o contraseña incorrectos.', ['status' => 403]);
+    }
+
+    // Verifica si el usuario tiene el rol de administrador
+    if (!in_array('administrator', $user->roles)) {
+        return new WP_Error('unauthorized', 'Acceso denegado. Solo administradores pueden ingresar.', ['status' => 403]);
+    }
+
+    // Crear un token aleatorio
+    $token = bin2hex(random_bytes(32));
+    update_user_meta($user->ID, 'api_token', $token); // Guardamos el token en el meta del usuario
+
+    return [
+        'status' => 'success',
+        'message' => 'Inicio de sesión exitoso',
+        'token' => $token,
+        'user' => [
+            'id' => $user->ID,
+            'username' => $user->user_login,
+            'email' => $user->user_email,
+            'roles' => $user->roles
+        ]
+    ];
+}
+
+add_action('rest_api_init', function () {
+    register_rest_route('api-custom/v1', '/logout', array(
+        'methods'  => 'POST',
+        'callback' => 'custom_api_logout',
+        'permission_callback' => '__return_true'
+    ));
+});
+
+function custom_api_logout(WP_REST_Request $request) {
+    $parameters = $request->get_json_params();
+    $user_id = intval($parameters['user_id']);
+
+    if (empty($user_id)) {
+        return new WP_Error('missing_user_id', 'Debes proporcionar un ID de usuario.', ['status' => 400]);
+    }
+
+    delete_user_meta($user_id, 'api_token'); // Elimina el token de sesión del usuario
+
+    return [
+        'status' => 'success',
+        'message' => 'Cierre de sesión exitoso'
+    ];
+}
+
+
+
+
+
+
+/*
+ * CORS PARA QUE FUNCIONE LAS APIS
+ * */
+function agregar_headers_cors() {
+    header("Access-Control-Allow-Origin: *"); // Permite cualquier origen (puedes limitarlo a tu dominio si prefieres)
+    header("Access-Control-Allow-Methods: GET, POST, DELETE,OPTIONS"); // Métodos permitidos
+    header("Access-Control-Allow-Headers: Authorization, Content-Type");
+
+    if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+        status_header(200);
+        exit();
+    }
+}
+
+add_action('init', 'agregar_headers_cors');
+
+
 ```
 
 Para más endpoints y funcionalidades, revisa el archivo `functions.php` dentro del plugin de Astra.
