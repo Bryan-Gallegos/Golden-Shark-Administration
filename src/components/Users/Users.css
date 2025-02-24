@@ -1,0 +1,79 @@
+/* Asegura que la tabla tenga un ancho fijo y distribuya bien las columnas */
+.table {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: #fff;
+  border-collapse: collapse;
+  border: 1px solid #ddd;
+  text-align: left;
+  table-layout: fixed; /* Hace que las columnas tengan un ancho fijo */
+}
+
+/* Define tamaños específicos para cada columna */
+.table th,
+.table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: center;
+  word-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Especificamos el ancho de cada columna */
+.table th:nth-child(1),
+.table td:nth-child(1) { width: 5%; }  /* ID */
+.table th:nth-child(2),
+.table td:nth-child(2) { width: 15%; } /* Nombre */
+.table th:nth-child(3),
+.table td:nth-child(3) { width: 15%; } /* Apellido */
+.table th:nth-child(4),
+.table td:nth-child(4) { width: 15%; } /* Username */
+.table th:nth-child(5),
+.table td:nth-child(5) { width: 20%; } /* Email */
+.table th:nth-child(6),
+.table td:nth-child(6) { width: 10%; } /* Roles */
+.table th:nth-child(7),
+.table td:nth-child(7) { width: 20%; } /* Acciones */
+
+/* Filas alternadas */
+.table tbody tr:nth-child(even) { background-color: #f9f9f9; }
+.table tbody tr:nth-child(odd) { background-color: #ffffff; }
+
+/* Estilos para los botones */
+.btn {
+  border-radius: 5px;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+  padding: 5px 10px;
+}
+
+.btn-success { background-color: #007bff; border: none; color: white; }
+.btn-info { background-color: #28a745; border: none; color: white; }
+.btn-danger { background-color: #dc3545; border: none; color: white; }
+
+/* PAGINACIÓN */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pagination .btn {
+  padding: 5px 10px;
+  margin: 0 5px;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  border: 1px solid #ddd;
+  background-color: #f8f9fa;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.pagination .btn.active { background-color: #007bff; color: white; border: none; }
+.pagination .btn:hover { background-color: #0056b3; color: white; }

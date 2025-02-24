@@ -1,0 +1,209 @@
+/* Contenedor principal */
+.add-role-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fafafa;
+  display: flex;
+  flex-direction: column; /* Coloca los elementos en vertical */
+  gap: 20px; /* Espaciado uniforme entre elementos */
+}
+
+/* Título */
+.title {
+  margin-bottom: 20px;
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+}
+
+/* Información del usuario */
+.user-info {
+  display: flex;
+  flex-direction: column; /* Alinea verticalmente */
+  gap: 10px;
+}
+
+.user-info p {
+  margin: 0;
+  font-size: 1rem;
+  color: #333;
+}
+
+/* Roles actuales */
+.current-roles {
+  display: flex;
+  flex-direction: column; /* Coloca los elementos en columna */
+  gap: 10px;
+}
+
+.current-roles h3 {
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.roles-list {
+  list-style: none;
+  padding: 0;
+}
+
+.role-item {
+  background-color: #f9f9f9;
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-size: 0.95rem;
+  color: #555;
+  font-weight: bold;
+}
+
+/* Formulario */
+.add-role-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.add-role-form label {
+  font-weight: bold;
+}
+
+.add-role-form select {
+  width: 100%; /* Toma todo el ancho disponible */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+.buttons-container{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+}
+
+.btn-regresar {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.btn-regresar:hover {
+  background-color: #5a6268;
+}
+
+/* Botón agregar rol (derecha) */
+.btn-agregar {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.btn-agregar:hover {
+  background-color: #218838;
+}
+/* Alertas */
+.alert {
+  padding: 10px 15px;
+  border-radius: 5px;
+  width: 100%;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.alert.error {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+
+.add-role-loading{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f4f4f4;
+}
+
+.add-role-alert{
+  font-size: 1.2 rem;
+  color: #555;
+  background-color: #ffffff;
+  padding: 15px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgb(0, 0, 0, 0.1);
+}
+
+/* Estilos para el modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-box {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-box h3 {
+  color: #28a745;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.modal-box p {
+  font-size: 16px;
+  color: #333;
+}
+
+.btn-modal-close {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 15px;
+  font-size: 14px;
+  transition: background 0.3s;
+}
+
+.btn-modal-close:hover {
+  background: #0056b3;
+}
+
+@keyframes fadeIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
