@@ -30,6 +30,7 @@ function AddRole() {
     "llamadas-comercia",
     "recordatorios",
     "curso_raul",
+    "oasis_club_customer",
   ];
 
   useEffect(() => {
