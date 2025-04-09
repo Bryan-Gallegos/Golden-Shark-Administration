@@ -31,6 +31,7 @@ function AddRole() {
     "recordatorios",
     "curso_raul",
     "oasis_club_customer",
+    "elite_academy",
   ];
 
   useEffect(() => {
