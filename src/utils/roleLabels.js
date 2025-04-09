@@ -19,6 +19,7 @@ const defaultRoleLabels = {
     "llamadas-comercia": "Llamadas-Comercia",
     "curso_raul": "Curso Raul",
     "oasis_club_customer": "Cliente Oasis Club",
+    "elite_academy": "Elite Academy",
 
   };
   
