@@ -20,7 +20,6 @@ function AddRole() {
   const password = "Nyjo lM7f CLor urrl ZCqh nlyW";
 
   const allRoles = [
-    "administrator",
     "editor",
     "author",
     "contributor",
